@@ -1,68 +1,871 @@
+/* =================================================== */
+/* 1. THEME VARIABLES & TRANSITIONS */
+/* =================================================== */
+
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    --color-primary: #007bff; 
+    --color-background: #f8f9fa; 
+    --color-card-background: #ffffff; 
+    --color-text: #212529; 
+    --color-text-light: #6c757d;
+    --color-border: #dee2e6;
+    --border-radius: 6px; 
+    --color-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+.dark {
+    --color-primary: #61dafb; 
+    --color-background: #1f2937; 
+    --color-card-background: #374151; 
+    --color-text: #f3f4f6; 
+    --color-text-light: #9ca3af; 
+    --color-border: #4b5563;
+    --color-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    --color-input-background-dark: #2d3748; 
 }
-a:hover {
-  color: #535bf2;
+
+body, .min-h-screen, .note-app-container, .auth-form-card, .note-card, 
+.note-form input, .note-form textarea, .user-table th, .user-table td, 
+.note-controls select, .note-controls .search-input {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+
+/* =================================================== */
+/* 2. GLOBAL & BASE STYLES */
+/* =================================================== */
+
+
+html, body {
+    overflow-x: hidden !important; 
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+html, body, #root, .App {
+    min-height: 100vh;
+}
+
+html {
+    overflow-y: scroll;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.5;
+}
+
+.min-h-screen { 
+    background-color: var(--color-background);
+    color: var(--color-text);
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+    font-size: 3.2em;
+    line-height: 1.1;
+    margin: 0; 
+    color: var(--color-text); 
+}
+
+h2 {
+    color: var(--color-text); 
+    margin-top: 0;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+    border-radius: var(--border-radius);
+    border: 1px solid transparent;
+    padding: 10px 15px; 
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    white-space: nowrap; 
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+
+/* =================================================== */
+/* 3. NAVBAR & HEADER (STICKY HEADER) */
+/* =================================================== */
+
+
+.navbar-container {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box; 
+    z-index: 1000 !important; 
+    background-color: var(--color-card-background);
+    color: var(--color-text);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+}
+
+.navbar-app-title {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 1.5em;
+    margin-right: 20px;
+    font-weight: bold;
+    flex-shrink: 0 !important;
+}
+
+.navbar-controls-group {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+}
+
+.navbar-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    padding: 5px 0;
+    transition: color 0.2s;
+    flex-shrink: 0 !important; 
+}
+
+.navbar-link:hover {
+    color: var(--color-text-light);
+}
+
+.note-count-badge {
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-left: 5px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background-color: var(--color-primary); 
+    color: var(--color-background); 
+}
+
+.navbar-admin-link {
+    text-decoration: none;
+    font-weight: bold;
+    color: #dc3545; 
+    flex-shrink: 0 !important; 
+}
+
+.dark .navbar-admin-link {
+    color: #61dafb; 
+}
+
+.theme-toggle-btn {
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    padding: 5px;
+    color: var(--color-primary); 
+    transition: transform 0.2s;
+    flex-shrink: 0 !important; 
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+.theme-toggle-btn.sun svg {
+    color: gold; 
+}
+
+.btn-logout {
+    background-color: #dc3545; 
+    color: white;
+    padding: 8px 15px;
+    flex-shrink: 0 !important; 
+}
+
+.btn-logout:hover {
+    background-color: #c82333;
+}
+
+
+/* =================================================== */
+/* 4. NOTE APP LAYOUT & TOASTIFY */
+/* =================================================== */
+
+
+.note-app-container { 
+    max-width: 1400px; 
+    margin: 0 auto;
+    padding: 0 20px;
+    min-height: 100vh;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 350px 1fr; 
+    gap: 30px; 
+    padding: 0; 
+    padding-top: 80px; 
+    align-items: start;
+}
+
+.left-panel {
+    position: sticky; 
+    top: 80px;
+    align-self: flex-start;
+    margin-left: 0; 
+}
+
+.right-panel {
+    padding: 0;
+    align-self: flex-start;
+}
+
+.Toastify__toast-container--top-right {
+    position: fixed;
+    top: 90px !important; 
+    right: 30px; 
+    max-width: 300px; 
+    z-index: 999; 
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        grid-template-columns: 1fr; 
+    }
+    .left-panel {
+        position: static; 
+    }
+    .note-app-container {
+        padding-top: 80px; 
+    }
+    .Toastify__toast-container--top-right {
+        top: 90px; 
+        right: 20px; 
+        left: 20px; 
+        max-width: unset; 
+        width: auto;
+    }
+}
+
+
+/* =================================================== */
+/* 5. NOTE FORM & EDIT MODAL STYLES */
+/* =================================================== */
+
+
+.note-form {
+    padding: 20px; 
+    border-radius: var(--border-radius); 
+    background-color: var(--color-card-background); 
+    box-shadow: var(--color-shadow); 
+}
+
+.note-form h2 {
+    border-bottom: 1px solid var(--color-border); 
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.note-form input[type="text"],
+.note-form textarea {
+    width: 100%; 
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    font-size: 1em;
+    background-color: var(--color-card-background); 
+    color: var(--color-text); 
+    margin-bottom: 15px; 
+}
+
+.note-form textarea {
+    min-height: 140px; 
+    resize: vertical;
+}
+
+.note-form input::placeholder,
+.note-form textarea::placeholder {
+    color: var(--color-text-light); 
+}
+
+.dark .note-form input::placeholder,
+.dark .note-form textarea::placeholder {
+    color: #aeb4be; 
+}
+
+.dark .note-form input[type="text"],
+.dark .note-form textarea {
+    background-color: var(--color-input-background-dark); 
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+.note-form .char-count {
+    display: block;
+    text-align: right;
+    font-size: 0.8em;
+    color: var(--color-text-light); 
+    margin-top: -10px; 
+    margin-bottom: 15px; 
+    padding-right: 2px;
+}
+
+.note-form button {
+    margin-top: 10px; 
+}
+
+.note-form .btn-save {
+    margin-top: 10px; 
+    background-color: var(--color-primary);
+    color: white;
+    margin-right: 15px !important; 
+}
+
+.note-form .btn-save:hover {
+    background-color: #0056b3;
+}
+
+.dark .note-form .btn-save:hover {
+    background-color: #4db8d8;
+}
+
+.note-form .btn-delete { 
+    background-color: #dc3545;
+    color: white;
+    margin-top: 10px;
+}
+
+.note-form .btn-delete:hover {
+    background-color: #c82333;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; 
+}
+
+.modal-content {
+    background: var(--color-card-background); 
+    color: var(--color-text);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    max-width: 500px;
+    width: 90%;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.dark .modal-content {
+    background: #252a36; 
+    color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.dark .modal-content input[type="text"],
+.dark .modal-content textarea {
+    background-color: #333946; 
+    color: #f0f0f0;
+    border: 1px solid #444c5a;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-text-light);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-content .modal-actions-group {
+    display: flex;
+    gap: 15px; 
+    margin-top: 20px;
+}
+
+.modal-content .modal-actions-group .btn-save,
+.modal-content .modal-actions-group .btn-cancel {
+    flex-grow: 1; 
+    padding: 10px 20px; 
+    text-align: center; 
+}
+
+.modal-content .modal-actions-group .btn-cancel {
+    background-color: #f44336; 
+}
+
+.modal-content .modal-actions-group .btn-cancel:hover {
+    background-color: #c82333; 
+}
+
+
+/* =================================================== */
+/* 6. NOTE LIST STYLES (Controls, Cards) */
+/* =================================================== */
+
+
+.note-list h2 {
+    margin-bottom: 15px;
+}
+
+.note-controls {
+    display: flex;
+    gap: 15px;
+    padding: 15px 20px;
+    margin-bottom: 40px; 
+    border-radius: var(--border-radius);
+    background-color: var(--color-card-background); 
+    box-shadow: var(--color-shadow); 
+    align-items: center;
+    position: sticky;
+    top: 80px; 
+    z-index: 10;
+}
+
+.note-controls .search-input {
+    flex-grow: 1; 
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-card-background); 
+    color: var(--color-text);
+    font-size: 1em;
+}
+
+.dark .note-controls .search-input {
+    border-color: var(--color-border); 
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    color: var(--color-text);
+}
+
+.note-controls select {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-card-background);
+    color: var(--color-text);
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.note-list-cards { 
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 20px;
+}
+
+.note-card {
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--color-shadow); 
+    border-left: 5px solid; 
+    background-color: var(--color-card-background);
+    display: flex;
+    flex-direction: column;
+}
+
+.note-content {
+    font-size: 0.95em; 
+    margin-bottom: 15px;
+    white-space: pre-wrap; 
+    word-break: break-word; 
+}
+
+.note-meta {
+    font-size: 0.85em;
+    color: var(--color-text-light); 
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.note-status {
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    padding-top: 5px;
+    border-top: 1px dashed var(--color-border); 
+}
+
+.completed-note {
+    border-left-color: #28a745; 
+}
+
+.dark .completed-note {
+    background-color: rgba(40, 167, 69, 0.2); 
+}
+
+.pending-note {
+    border-left-color: #ffc107; 
+}
+
+.dark .pending-note {
+    background-color: rgba(255, 193, 7, 0.15); 
+}
+
+.note-actions {
+    display: flex;
+    gap: 10px; 
+    margin-top: 15px;
+    margin-top: auto; 
+    padding-top: 15px; 
+    border-top: 1px solid var(--color-border);
+}
+
+.note-actions button {
+    padding: 8px 12px; 
+    font-size: 0.9em;
+}
+
+.btn-edit {
+    background-color: #6c757d; 
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #5a6268;
+}
+
+.dark .btn-edit {
+    background-color: #7b9cff;
+    color: #212529;
+    font-weight: bold;
+}
+
+.dark .btn-edit:hover {
+    background-color: #a4b9ff;
+}
+
+.btn-done {
+    background-color: #28a745; 
+    color: white;
+}
+
+.btn-done:hover {
+    background-color: #1e7e34;
+}
+
+.btn-pending { 
+    background-color: #ffc107; 
+    color: #333;
+    font-weight: bold;
+}
+
+.btn-pending:hover {
+    background-color: #e0a800;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+
+/* =================================================== */
+/* 7. AUTH PAGE STYLES */
+/* =================================================== */
+
+
+.auth-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-form-card {
+    background-color: var(--color-card-background); 
+    padding: 30px; 
+    border-radius: var(--border-radius); 
+    box-shadow: var(--color-shadow); 
+    width: 100%; 
+    max-width: 380px; 
+    text-align: center; 
+}
+
+.auth-form-card h2 {
+    margin-bottom: 25px;
+}
+
+.auth-form-card input {
+    width: 100%; 
+    padding: 12px; 
+    margin-bottom: 15px; 
+    border: 1px solid var(--color-border); 
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1em;
+    background-color: var(--color-card-background); 
+    color: var(--color-text); 
+}
+
+.dark .auth-form-card input {
+    background-color: var(--color-input-background-dark); 
+    color: var(--color-text); 
+    border-color: var(--color-border);
+}
+
+.auth-button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    margin-top: 10px;
+}
+
+.auth-button:hover {
+    background-color: #0056b3; 
+}
+
+.dark .auth-button:hover {
+    background-color: #4db8d8; 
+}
+
+.auth-form-card a {
+    color: var(--color-primary); 
+    text-decoration: none;
+}
+
+
+/* =================================================== */
+/* 8. ADMIN PAGE & TABLE STYLES */
+/* =================================================== */
+
+
+.admin-page-container {
+    padding: 30px;
+    padding-top: 100px; 
+    min-height: calc(100vh - 60px); 
+}
+
+.admin-controls {
+    display: flex;
+    gap: 15px;
+    padding: 15px 20px;
+    margin-bottom: 25px; 
+    border-radius: var(--border-radius);
+    background-color: var(--color-card-background); 
+    box-shadow: var(--color-shadow); 
+    align-items: center;
+}
+
+.admin-controls .search-input {
+    flex-grow: 1; 
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-card-background); 
+    color: var(--color-text);
+    font-size: 1em;
+}
+
+.dark .admin-controls .search-input {
+    border-color: var(--color-border); 
+}
+
+.admin-controls .control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    color: var(--color-text);
+    flex-shrink: 0;
+}
+
+.admin-page-container h2 {
+    margin-bottom: 5px;
+}
+
+.admin-page-container p {
+    color: var(--color-text-light); 
+    margin-bottom: 20px;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: var(--color-shadow);
+    border-radius: var(--border-radius);
+    overflow: hidden; 
+}
+
+.user-table th, .user-table td {
+    border: 1px solid var(--color-border); 
+    padding: 12px 15px;
+    text-align: left;
+    color: var(--color-text); 
+}
+
+.user-table th {
+    background-color: var(--color-card-background); 
+    font-weight: bold;
+}
+
+.user-table select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-card-background);
+    color: var(--color-text);
+    cursor: pointer;
+    min-width: 90px;
+    font-size: 0.9em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.dark .user-table select {
+    background-color: var(--color-input-background-dark); 
+    color: var(--color-text);
+}
+
+.user-table .action-column {
+    width: 130px; 
+    text-align: center;
+    white-space: nowrap;
+}
+
+.user-table tbody tr {
+    background-color: var(--color-card-background);
+}
+
+:not(.dark) .user-table tbody tr:nth-child(odd) {
+    background-color: #f3f3f3; 
+}
+
+:not(.dark) .user-table tbody tr:hover {
+    background-color: #e6e6e6;
+}
+
+.dark .user-table tbody tr:nth-child(odd) {
+    background-color: #4b5563; 
+}
+
+.dark .user-table tbody tr:nth-child(even) {
+    background-color: #374151; 
+}
+
+.dark .user-table tbody tr:hover {
+    background-color: #4b5563; 
+}
+
+.user-table .btn-delete {
+    padding: 6px 10px;
+    font-size: 0.9em;
+}
+
+
+/* =================================================== */
+/* 9. ERROR, LOADING, & SKELETON STYLES */
+/* =================================================== */
+
+
+.error-message {
+    font-weight: bold;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #dc3545;
+    background-color: var(--color-card-background);
+    border-radius: 4px;
+}
+.dark .error-message {
+    border-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.2);
+}
+
+.loading-message {
+    text-align: center;
+    font-size: 1.2em;
+    color: var(--color-primary);
+    margin-top: 50px;
+}
+
+@keyframes loading-pulse {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: 200px 0;
+    }
+}
+
+.skeleton-card {
+    box-shadow: none; 
+    opacity: 0.8;
+}
+
+.skeleton-line, .skeleton-button {
+    height: 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+    background-image: linear-gradient(90deg, #e0e0e0 0px, #f5f5f5 50px, #e0e0e0 100px);
+    background-size: 200px 100%;
+    background-repeat: no-repeat;
+    animation: loading-pulse 1.5s infinite linear;
+}
+
+.dark .skeleton-line, .dark .skeleton-button {
+    background-color: #4b5563; 
+    background-image: linear-gradient(90deg, #4b5563 0px, #6b7280 50px, #4b5563 100px); 
+}
+
+.skeleton-title {
+    width: 70%;
+    height: 20px;
+}
+
+.skeleton-content-1 {
+    width: 90%;
+}
+
+.skeleton-content-2 {
+    width: 80%;
+}
+
+.skeleton-meta {
+    width: 40%;
+}
+
+.skeleton-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.skeleton-button {
+    height: 35px;
+    width: 120px; 
+    margin-bottom: 0;
 }
